@@ -1,0 +1,7 @@
+{
+    "forward": ["gan1","pangguang1"],
+    "backward": [],
+    "inside": ["dan1"],
+    "outside": ["shen1"],
+    "down": ["gan2","xinbao","wei1","wei2","wei3","pangguang2","sanjiao","fei","dachang","xiaochang","pi2","xin","shen2","pi1","ren","du","dan2"]
+}

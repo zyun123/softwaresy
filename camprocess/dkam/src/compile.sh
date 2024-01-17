@@ -1,0 +1,1 @@
+g++ cam_process.cpp -L/usr/lib/libDkamSDK -lDkamSDK -lopencv_world -lGenApi -o cam_process -lpthread -Wl,-rpath=/usr/lib/libDkamSDK

@@ -1,0 +1,177 @@
+﻿cmake_minimum_required(VERSION 3.14)
+project (TaoQuick LANGUAGES CXX)
+
+SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
+# use c++17
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# for conan lib 
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
+# use test
+#enable_testing()
+
+if (NOT PROJECT_BINARY_DIR)
+	set(PROJECT_BINARY_DIR build)
+endif()
+
+# note:
+# Find dependencies.# path of qt installed
+set(QT_DIR ~/Qt5.12.12/5.12.12/gcc_64)
+
+# Prepare project for Qt. 
+#set(CMAKE_PREFIX_PATH $ENV{QTDIR})
+set(CMAKE_PREFIX_PATH ${QT_DIR})
+set(CMAKE_INCLUDE_CURRENT_DIR ON) # Find includes in corresponding build directories.
+set(CMAKE_AUTOMOC ON) # Instruct CMake to run moc automatically when needed.
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+
+set (EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+set (LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+
+if (NOT CMAKE_BUILD_TYPE) 
+    set(CMAKE_BUILD_TYPE "Release")
+endif()
+message("Build Type " ${CMAKE_BUILD_TYPE})
+
+
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+get_filename_component(TargetName ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Gui Sql Widgets Network Quick QuickControls2 REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Gui  Sql Widgets Quick Network QuickControls2 REQUIRED)
+message("QT_VERSION ${QT_VERSION}")
+if (QT_VERSION VERSION_LESS 5.12.12)
+    message(FATAL_ERROR "TaoQuick minimum supported Qt5 version is 5.12.12")
+endif()
+
+# find_package( OpenCV 4.5.3 REQUIRED )
+# message(STATUS "OpenCV: found=${OpenCV_FOUND}, include_dirs=${OpenCV_INCLUDE_DIR}, "
+#     "lib=${OpenCV_LIBRARY}, version=${OpenCV_VERSION}")
+
+# find_package(Boost 1.79.0 REQUIRED)
+# message(STATUS "Boost: found=${Boost_FOUND}, include_dirs=${Boost_INCLUDE_DIR}, "
+#     "lib=${Boost_LIBRARY}, version=${Boost_VERSION}")
+# #DEFINES += NUMCPP_NO_USE_BOOST
+
+# find_package(NumCpp  2.7.0 REQUIRED  )
+# #set(NUMCPP_NO_USE_BOOST)
+# message(STATUS "NumCpp: found=${NumCpp_FOUND}, include_dirs=${NumCpp_INCLUDE_DIR}, "
+#     "lib=${NumCpp_LIBRARY}, version=${NumCpp_VERSION}")
+
+#find_package(QXlsx REQUIRED)
+
+find_package(realsense2 2.50.0 REQUIRED)# for realsense  lib ,installed by .sh,not apt
+message(STATUS "realsense2: found=${realsense2_FOUND}, include_dirs=${realsense2_INCLUDE_DIR}, "
+    "lib=${realsense2_LIBRARY}, version=${realsense2_VERSION}")
+
+# static lib
+link_directories(StaticLib)
+
+aux_source_directory(DeviceControl SRC1)
+aux_source_directory(DeviceAddTable SRC2)
+#aux_source_directory(xlsx SRC3)
+aux_source_directory(Patient SRC4)
+
+aux_source_directory(PWD/../../../../../usr/local/include/NumCpp SRC13)
+
+include(taoQuick.cmake)
+include(mainQml.cmake)
+#include(taoVersion)
+add_compile_definitions(TaoCommon_lib)
+#add_subdirectory(${CMAKE_SOURCE_DIR}/TaoQuick/imports ${CMAKE_SOURCE_DIR}/build/TaoQuick/imports)
+add_subdirectory(${CMAKE_SOURCE_DIR}/TaoCommon  ${CMAKE_SOURCE_DIR}/build/TaoCommon )
+message("TaoCommonPath ${TaoCommonPath}")
+message("TaoCommonFiles ${TaoCommonFiles}")
+
+
+
+message("TaoQuickRes ${TaoQuickRes}")
+#set (Res qml.qrc Contents.qrc Image.qrc)
+set (Res  TaoCommon/)
+if (CMAKE_BUILD_TYPE MATCHES "Release")
+    if(WIN32)
+        add_executable(${TargetName}
+            ${SRC1}
+            ${SRC2}
+      #      ${SRC3}
+            ${SRC4}
+            ${SRC13}
+            ${TaoCommonFiles}
+            ${Res}
+            ${MainQmlRes}
+            ${TaoQuickRes}
+            App.rc
+            )
+    elseif(APPLE)
+        add_executable(${TargetName}
+            ${SRC1}
+            ${SRC2}
+    #        ${SRC3}
+            ${SRC4}
+            ${SRC13}
+            ${TaoCommonFiles}
+            ${Res}
+            milk.icns
+            ${MainQmlRes}
+            ${TaoQuickRes}
+            )
+    else()
+        add_executable(${TargetName}
+            ${SRC1}
+            ${SRC2}
+    #        ${SRC3}
+            ${SRC4}
+            ${SRC13}
+            ${TaoCommonFiles}
+            ${Res}
+            ${MainQmlRes}
+            ${TaoQuickRes}
+            global.cpp
+            main.cpp
+            myfile.cpp
+            comconqml.cpp
+            )
+    endif()
+
+else()
+    add_executable(${TargetName}
+        ${SRC1}
+        ${SRC2}
+   #     ${SRC3}
+        ${SRC4}
+        ${SRC13}
+        ${TaoCommonFiles}
+        global.cpp
+        main.cpp
+       qml.qrc
+       ${TaoQuickRes}
+       #qrc_qml.cpp
+        myfile.cpp
+        comconqml.cpp
+        )
+
+  
+endif()
+
+
+
+
+#target_include_directories(${TargetName} PUBLIC . ./Src ${TaoCommonPath} xlsx  StaticLib/libQXlsx   )
+target_include_directories(${TargetName} PUBLIC . ./Src  ${TaoCommonPath}  StaticLib/libQXlsx   )
+include_directories(${OpenCV_INCLUDE_DIRS} ${NumCpp_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS}  /usr/include/librealsense2   /usr/include/librealsense2/h  /usr/include/librealsense2/hpp)
+
+target_compile_definitions(${TargetName}
+    PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
+#  note :libs and library,need check
+target_link_libraries(${TargetName} 
+    PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Gui  Qt${QT_VERSION_MAJOR}::GuiPrivate Qt${QT_VERSION_MAJOR}::Sql Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::Network Qt${QT_VERSION_MAJOR}::QuickControls2   ${realsense2_LIBRARY} libQXlsx.a ${CONAN_LIBS} )  #${NumCpp_LIBS}  
+    
+
+#configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Trans/language_zh.json ${EXECUTABLE_OUTPUT_PATH}/Trans/language_zh.json COPYONLY)
+

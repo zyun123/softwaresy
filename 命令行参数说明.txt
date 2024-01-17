@@ -1,0 +1,12 @@
+--SaveCureImg             是否调理过程保存图片 true false
+--BedVer                  床接口版本：1 2
+--CamType                 相机型号 realsense kinect
+--EnableCurrentsProtect   是否开启电流值保护 true false
+--EnableLeftSensor        是否启用左机械臂外置传感 true false
+--EnableRightSensor       是否启用右机械臂外置传感 true false
+--LinkRealBot             是否连接真实机械臂 true false
+--EnableTestThread        是否启用测试线程 true false
+--EnableLog               是否开启日志 true false
+--EnableOneBtnCare        是否启用保健版一键启动 true false
+
+qt debug: --SaveCureImg=true --BedVer=1 --CamType=kinect --EnableCurrentsProtect=false --EnableLeftSensor=false --EnableRightSensor=false --LinkRealBot=false --EnableTestThread=false --EnableLog=false --EnableOneBtnCare=true

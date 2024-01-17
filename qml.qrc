@@ -1,0 +1,39 @@
+<RCC>
+    <qresource prefix="/">
+        <file>NewUISet/Bedctl.qml</file>
+        <file>NewUISet/Calibrate.qml</file>
+        <file>NewUISet/CureList.qml</file>
+        <file>NewUISet/CurePage.qml</file>
+        <file>NewUISet/DevOps.qml</file>
+        <file>NewUISet/DevOthers.qml</file>
+        <file>NewUISet/Entry.qml</file>
+        <file>NewUISet/Home.qml</file>
+        <file>NewUISet/IdentifyReuslt.qml</file>
+        <file>NewUISet/JingLuoMenu.qml</file>
+        <file>NewUISet/Loading.qml</file>
+        <file>NewUISet/Login.qml</file>
+        <file>NewUISet/Robotctl.qml</file>
+        <file>NewUISet/RTCamView.qml</file>
+        <file>NewUISet/Settings.qml</file>
+        <file>NewUISet/Tips.qml</file>
+        <file>NewUISet/Warning.qml</file>
+        <file>NewUISet/UserManage.qml</file>
+        <file>NewUISet/UserManageRowEdit.qml</file>
+        <file>NewUISet/PatientManage.qml</file>
+        <file>NewUISet/InfoPage.qml</file>
+        <file>NewUISet/PatientManageRowEdit.qml</file>
+        <file>NewUISet/CureRecord.qml</file>
+        <file>NewUISet/FormulaPage.qml</file>
+        <file>NewUISet/Blocking.qml</file>
+        <file>NewUISet/RTIdentifyResult.qml</file>
+        <file>NewUISet/Diagnosis.qml</file>
+        <file>NewUISet/About.qml</file>
+        <file>NewUISet/AddPatientInfo.qml</file>
+        <file>NewUISet/AppointmentView.qml</file>
+        <file>NewUISet/qml_basic/MyButton.qml</file>
+        <file>NewUISet/qml_basic/MyTableView.qml</file>
+        <file>NewUISet/DevMaintain.qml</file>
+        <file>NewUISet/FormulaPageEdit.qml</file>
+        <file>NewUISet/qml_basic/MyMessageBox.qml</file>
+    </qresource>
+</RCC>
